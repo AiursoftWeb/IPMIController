@@ -1,7 +1,7 @@
 ﻿using System.CommandLine;
 using Aiursoft.CommandFramework.Models;
 
-namespace Aiursoft.IPMIController.Services;
+namespace Aiursoft.IpmiController.Services;
 
 public static class OptionsProvider
 {

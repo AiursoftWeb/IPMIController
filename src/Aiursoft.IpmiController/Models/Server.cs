@@ -1,4 +1,4 @@
-﻿namespace Aiursoft.IPMIController.Models;
+﻿namespace Aiursoft.IpmiController.Models;
 
 public class Server
 {

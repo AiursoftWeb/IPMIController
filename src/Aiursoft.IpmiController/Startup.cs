@@ -1,8 +1,8 @@
 ﻿using Aiursoft.CommandFramework.Abstracts;
-using Aiursoft.IPMIController.Services;
+using Aiursoft.IpmiController.Services;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Aiursoft.IPMIController;
+namespace Aiursoft.IpmiController;
 
 public class Startup : IStartUp
 {

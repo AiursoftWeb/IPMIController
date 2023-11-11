@@ -1,9 +1,9 @@
 ﻿// Program.cs
 using Aiursoft.CommandFramework;
 using Aiursoft.CommandFramework.Extensions;
-using Aiursoft.IPMIController.Services;
+using Aiursoft.IpmiController.Services;
 
-namespace Aiursoft.IPMIController;
+namespace Aiursoft.IpmiController;
 
 public class Program
 {

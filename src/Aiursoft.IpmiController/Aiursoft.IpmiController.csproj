@@ -4,7 +4,7 @@
     <Version>1.0.0</Version>
     <TargetFramework>net7.0</TargetFramework>
     <AssemblyName>ipmi-controller</AssemblyName>
-    <RootNamespace>Aiursoft.IPMIController</RootNamespace>
+    <RootNamespace>Aiursoft.IpmiController</RootNamespace>
     <IsTestProject>false</IsTestProject>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <IsPackable>true</IsPackable>
@@ -15,7 +15,7 @@
     <Company>Aiursoft</Company>
     <Product>Cli</Product>
     <Description>Nuget package of 'Cli' provided by Aiursoft</Description>
-    <PackageId>Aiursoft.IPMIController</PackageId>
+    <PackageId>Aiursoft.IpmiController</PackageId>
     <PackageTags>nuget package dotnet cli tool</PackageTags>
     <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>

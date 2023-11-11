@@ -2,12 +2,12 @@
 using Aiursoft.CommandFramework.Framework;
 using Aiursoft.CommandFramework.Models;
 using Aiursoft.CommandFramework.Services;
-using Aiursoft.IPMIController.Models;
-using Aiursoft.IPMIController.Services;
+using Aiursoft.IpmiController.Models;
+using Aiursoft.IpmiController.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Aiursoft.IPMIController;
+namespace Aiursoft.IpmiController;
 
 public class MonitorHandler : CommandHandler
 {

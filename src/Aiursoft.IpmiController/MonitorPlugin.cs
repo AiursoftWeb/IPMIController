@@ -1,7 +1,7 @@
 ﻿using Aiursoft.CommandFramework.Abstracts;
 using Aiursoft.CommandFramework.Framework;
 
-namespace Aiursoft.IPMIController;
+namespace Aiursoft.IpmiController;
 
 public class MonitorPlugin : IPlugin
 {
