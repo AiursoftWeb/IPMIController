@@ -3,6 +3,7 @@ using Aiursoft.CommandFramework.Framework;
 using Aiursoft.CommandFramework.Models;
 using Aiursoft.CommandFramework.Services;
 using Aiursoft.IpmiController.Models;
+using Aiursoft.IpmiController.Services;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
@@ -51,6 +52,11 @@ public class MonitorHandler : CommandHandler
             })
             .Build();
 
-        await host.RunAsync();
+        await host.StartAsync();
+        
+        var serverInitializer = host.Services.GetRequiredService<ServerInitializer>();
+        await serverInitializer.Start();
+        
+        await host.WaitForShutdownAsync();
     }
 }

@@ -32,7 +32,7 @@ public class ServerMonitor : IHostedService
     public Task StartAsync(CancellationToken cancellationToken)
     {
         _logger.LogInformation("Timed Background Service is starting");
-        _timer = new Timer(DoWork, null, TimeSpan.FromSeconds(5), TimeSpan.FromMinutes(10));
+        _timer = new Timer(DoWork, null, TimeSpan.FromSeconds(20), TimeSpan.FromSeconds(10));
         return Task.CompletedTask;
     }
 
@@ -50,44 +50,21 @@ public class ServerMonitor : IHostedService
     
     private async Task StartMonitoring(CancellationToken token = default)
     {
-        _logger.LogInformation("Starting monitoring for {Count} servers...", _servers.Length);
-        var runner = new CommandService();
+        var profile = GetProfile();
+        _logger.LogInformation("Current Profile is {Profile}", profile.Name);
+
         foreach (var server in _servers)
         {
-            _logger.LogInformation($"Initializing server: {server.HostOrIp}...");
-            await runner.RunCommandAsync("ipmitool",
-                $"-I lanplus -H {server.HostOrIp} -U root -P {server.RootPassword} raw 0x30 0xce 0x00 0x16 0x05 0x00 0x00 0x00 0x05 0x00 0x01 0x00 0x00",
-                Directory.GetCurrentDirectory());
-            await runner.RunCommandAsync("ipmitool",
-                $"-I lanplus -H {server.HostOrIp} -U root -P {server.RootPassword} raw 0x30 0x30 0x01 0x00",
-                Directory.GetCurrentDirectory());
-        }
-
-        await Task.Delay(20 * 1000);
-
-        while (true)
-        {
-            var profile = GetProfile();
-            _logger.LogInformation("Current Profile is {Profile}", profile.Name);
-
-            foreach (var server in _servers)
+            _ = Task.Run(async () =>
             {
-                _ = Task.Run(async () =>
-                {
-                    var serverTemperature = await GetTemperature(server);
-                    var fanSpeed = GetFanSpeedFromTemperature(serverTemperature);
-                    var safeFanSpeed = Math.Max(fanSpeed, 8);
-                    
-                    _logger.LogInformation("Temp is {ServerTemperature}, fan should be set to {SafeFanSpeed}. {HostOrIp}", serverTemperature, safeFanSpeed, server.HostOrIp);
-                    await SetFan(server, safeFanSpeed);
-                }, token);
-                await Task.Delay(800, token);
-            }
-            await Task.Delay(10 * 1000, token);
-            if (token.IsCancellationRequested)
-            {
-                break;
-            }
+                var serverTemperature = await GetTemperature(server);
+                var fanSpeed = GetFanSpeedFromTemperature(serverTemperature, profile);
+                var safeFanSpeed = Math.Max(fanSpeed, 6);
+                
+                _logger.LogInformation("Temperature {ServerTemperature}, fan should be set to {SafeFanSpeed}. {HostOrIp} with offset {Offset}", serverTemperature, safeFanSpeed, server.HostOrIp, server.Offset);
+                await SetFan(server, safeFanSpeed);
+            }, token);
+            await Task.Delay(800, token);
         }
     }
 
@@ -129,9 +106,8 @@ public class ServerMonitor : IHostedService
         }
     }
 
-    private int GetFanSpeedFromTemperature(int temperature)
+    private int GetFanSpeedFromTemperature(int temperature, Profile profile)
     {
-        var profile = GetProfile();
         if (temperature < profile.DesiredTemperature)
         {
             return 0;

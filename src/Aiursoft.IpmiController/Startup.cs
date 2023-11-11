@@ -9,6 +9,7 @@ public class Startup : IStartUp
 {
     public void ConfigureServices(IServiceCollection services)
     {
+        services.AddTransient<ServerInitializer>();
         services.AddSingleton<IHostedService, ServerMonitor>();
     }
 }
