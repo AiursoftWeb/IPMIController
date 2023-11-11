@@ -3,9 +3,9 @@ using Aiursoft.CommandFramework.Framework;
 using Aiursoft.CommandFramework.Models;
 using Aiursoft.CommandFramework.Services;
 using Aiursoft.IpmiController.Models;
-using Aiursoft.IpmiController.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 
 namespace Aiursoft.IpmiController;
 
@@ -29,17 +29,14 @@ public class MonitorHandler : CommandHandler
             {
                 config.AddJsonFile("appsettings.json", optional: false);
             })
+            .ConfigureServices((context , services)=>
+            {
+                var servers = context.Configuration.GetSection("Servers");
+                services.Configure<List<Server>>(servers);
+            })
             .Build();
+        
 
-        await host.StartAsync();
-        
-        var servers = host
-            .Services
-            .GetRequiredService<IConfiguration>()
-            .GetSection("Servers")
-            .Get<Server[]>();
-        
-        var serverMonitor = host.Services.GetRequiredService<ServerMonitor>();
-        await serverMonitor.StartMonitoring(servers!, token: default);
+        await host.RunAsync();
     }
 }

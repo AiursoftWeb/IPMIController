@@ -1,24 +1,55 @@
 ﻿using System.Text.RegularExpressions;
 using Aiursoft.CSTools.Services;
 using Aiursoft.IpmiController.Models;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
 namespace Aiursoft.IpmiController.Services;
 
-public class ServerMonitor
+public class ServerMonitor : IHostedService
 {
-    private readonly ILogger<ServerMonitor> _logger;
+    private readonly Server[] _servers;
+    private readonly ILogger _logger;
+    private Timer? _timer;
 
-    public ServerMonitor(ILogger<ServerMonitor> logger)
+    public ServerMonitor(
+        IOptions<List<Server>> servers,
+        ILogger<ServerMonitor> logger)
     {
+        _servers = servers.Value.ToArray();
         _logger = logger;
     }
-    
-    public async Task StartMonitoring(Server[] servers, CancellationToken token = default)
+
+    public void Dispose()
     {
-        _logger.LogInformation("Starting monitoring for {Count} servers...", servers.Length);
+        _timer?.Dispose();
+    }
+
+    public Task StartAsync(CancellationToken cancellationToken)
+    {
+        _logger.LogInformation("Timed Background Service is starting");
+        _timer = new Timer(DoWork, null, TimeSpan.FromSeconds(5), TimeSpan.FromMinutes(10));
+        return Task.CompletedTask;
+    }
+
+    public Task StopAsync(CancellationToken cancellationToken)
+    {
+        _logger.LogInformation("Timed Background Service is stopping");
+        _timer?.Change(Timeout.Infinite, 0);
+        return Task.CompletedTask;
+    }
+
+    private async void DoWork(object? state)
+    {
+        await StartMonitoring();
+    }
+    
+    private async Task StartMonitoring(CancellationToken token = default)
+    {
+        _logger.LogInformation("Starting monitoring for {Count} servers...", _servers.Length);
         var runner = new CommandService();
-        foreach (var server in servers)
+        foreach (var server in _servers)
         {
             _logger.LogInformation($"Initializing server: {server.HostOrIp}...");
             await runner.RunCommandAsync("ipmitool",
@@ -29,21 +60,22 @@ public class ServerMonitor
                 Directory.GetCurrentDirectory());
         }
 
-        await Task.Delay(20 * 1000, token);
+        await Task.Delay(20 * 1000);
 
         while (true)
         {
             var profile = GetProfile();
             _logger.LogInformation("Current Profile is {Profile}", profile.Name);
 
-            foreach (var server in servers)
+            foreach (var server in _servers)
             {
                 _ = Task.Run(async () =>
                 {
                     var serverTemperature = await GetTemperature(server);
                     var fanSpeed = GetFanSpeedFromTemperature(serverTemperature);
                     var safeFanSpeed = Math.Max(fanSpeed, 8);
-                    Console.WriteLine($"Temp is {serverTemperature}, fan should be set to {safeFanSpeed}. {server.HostOrIp}");
+                    
+                    _logger.LogInformation("Temp is {ServerTemperature}, fan should be set to {SafeFanSpeed}. {HostOrIp}", serverTemperature, safeFanSpeed, server.HostOrIp);
                     await SetFan(server, safeFanSpeed);
                 }, token);
                 await Task.Delay(800, token);
