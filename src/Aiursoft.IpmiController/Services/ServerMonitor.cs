@@ -14,7 +14,6 @@ public class ServerMonitor
         _logger = logger;
     }
     
-    
     public async Task StartMonitoring(Server[] servers, CancellationToken token = default)
     {
         _logger.LogInformation("Starting monitoring...");
@@ -28,7 +27,6 @@ public class ServerMonitor
             await runner.RunCommandAsync("ipmitool",
                 $"-I lanplus -H {server.HostOrIp} -U root -P {server.RootPassword} raw 0x30 0x30 0x01 0x00",
                 Directory.GetCurrentDirectory());
-            //await SetFan(server, 100);
         }
 
         await Task.Delay(20 * 1000, token);

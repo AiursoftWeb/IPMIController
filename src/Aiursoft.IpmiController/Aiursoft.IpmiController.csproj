@@ -13,8 +13,8 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <Company>Aiursoft</Company>
-    <Product>Cli</Product>
-    <Description>Nuget package of 'Cli' provided by Aiursoft</Description>
+    <Product>IpmiController</Product>
+    <Description>Nuget package of 'IpmiController' provided by Aiursoft</Description>
     <PackageId>Aiursoft.IpmiController</PackageId>
     <PackageTags>nuget package dotnet cli tool</PackageTags>
     <PackageReadmeFile>README.md</PackageReadmeFile>
