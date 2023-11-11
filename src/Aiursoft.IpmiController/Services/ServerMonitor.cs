@@ -16,7 +16,7 @@ public class ServerMonitor
     
     public async Task StartMonitoring(Server[] servers, CancellationToken token = default)
     {
-        _logger.LogInformation("Starting monitoring...");
+        _logger.LogInformation("Starting monitoring for {Count} servers...", servers.Length);
         var runner = new CommandService();
         foreach (var server in servers)
         {

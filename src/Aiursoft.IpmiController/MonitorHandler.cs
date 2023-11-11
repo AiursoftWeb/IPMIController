@@ -23,19 +23,23 @@ public class MonitorHandler : CommandHandler
 
     private async Task Execute(bool verbose)
     {
-        var configuration = new ConfigurationBuilder()
-            .AddJsonFile("appsettings.json", optional: false)
-            .Build();
-        
-        var servers = configuration.GetSection("Servers").Get<Server[]>();
-        
         var host = ServiceBuilder
             .BuildHost<Startup>(verbose)
+            .ConfigureHostConfiguration(config =>
+            {
+                config.AddJsonFile("appsettings.json", optional: false);
+            })
             .Build();
 
         await host.StartAsync();
         
+        var servers = host
+            .Services
+            .GetRequiredService<IConfiguration>()
+            .GetSection("Servers")
+            .Get<Server[]>();
+        
         var serverMonitor = host.Services.GetRequiredService<ServerMonitor>();
-        await serverMonitor.StartMonitoring(servers!, CancellationToken.None);
+        await serverMonitor.StartMonitoring(servers!, token: default);
     }
 }
