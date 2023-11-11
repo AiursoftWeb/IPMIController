@@ -1,2 +1,12 @@
-﻿// See https://aka.ms/new-console-template for more information
-Console.WriteLine("Hello, World!");
+﻿// Program.cs
+using Aiursoft.CommandFramework;
+using Aiursoft.CommandFramework.Extensions;
+
+return await new AiursoftCommand()
+    .Configure(command =>
+    {
+        command
+            .AddGlobalOptions()
+            .AddPlugins(new MonitorPlugin());
+    })
+    .RunAsync(args);
