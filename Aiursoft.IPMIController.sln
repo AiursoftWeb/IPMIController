@@ -7,6 +7,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{540512B1-715
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Aiursoft.IpmiController", "src\Aiursoft.IpmiController\Aiursoft.IpmiController.csproj", "{EBE5D8E3-6C81-42F0-B846-7BF0DE7F1F1A}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{C7647BB7-AEB6-4A0C-A482-7EA639842BD4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Aiursoft.IpmiController.Tests", "tests\Aiursoft.IpmiController.Tests\Aiursoft.IpmiController.Tests.csproj", "{342FE742-B8B1-4BF5-A528-2CC22514BAB0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -17,11 +21,16 @@ Global
 		{EBE5D8E3-6C81-42F0-B846-7BF0DE7F1F1A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EBE5D8E3-6C81-42F0-B846-7BF0DE7F1F1A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EBE5D8E3-6C81-42F0-B846-7BF0DE7F1F1A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{342FE742-B8B1-4BF5-A528-2CC22514BAB0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{342FE742-B8B1-4BF5-A528-2CC22514BAB0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{342FE742-B8B1-4BF5-A528-2CC22514BAB0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{342FE742-B8B1-4BF5-A528-2CC22514BAB0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{EBE5D8E3-6C81-42F0-B846-7BF0DE7F1F1A} = {540512B1-7151-4C3C-B18E-DB2818015550}
+		{342FE742-B8B1-4BF5-A528-2CC22514BAB0} = {C7647BB7-AEB6-4A0C-A482-7EA639842BD4}
 	EndGlobalSection
 EndGlobal
