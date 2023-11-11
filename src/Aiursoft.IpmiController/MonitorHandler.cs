@@ -22,22 +22,31 @@ public class MonitorHandler : CommandHandler
     {
         IsRequired = false
     };
+    
+    private readonly Option<int> _minFan = new(
+        aliases: new[] { "--minfan", "-m" },
+        getDefaultValue: () => 6,
+        description: "The minimum fan speed. Can be: 0-100.")
+    {
+        IsRequired = false
+    };
 
     public override Option[] GetCommandOptions()
     {
         return new Option[]
         {
-            _profile
+            _profile,
+            _minFan
         };
     }
 
     public override void OnCommandBuilt(Command command)
     {
         command.SetHandler(
-            Execute, CommonOptionsProvider.VerboseOption, _profile);
+            Execute, CommonOptionsProvider.VerboseOption, _profile, _minFan);
     }
 
-    private async Task Execute(bool verbose, string profile)
+    private async Task Execute(bool verbose, string profile, int minFan)
     {
         var host = ServiceBuilder
             .CreateCommandHostBuilder<Startup>(verbose)
@@ -48,6 +57,7 @@ public class MonitorHandler : CommandHandler
                 services.Configure<ProfileConfig>(config =>
                 {
                     config.Profile = profile;
+                    config.MinFan = minFan;
                 });
             })
             .Build();

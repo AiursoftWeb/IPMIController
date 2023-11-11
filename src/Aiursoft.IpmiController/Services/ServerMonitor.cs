@@ -59,7 +59,7 @@ public class ServerMonitor : IHostedService
             {
                 var serverTemperature = await GetTemperature(server);
                 var fanSpeed = GetFanSpeedFromTemperature(serverTemperature, profile);
-                var safeFanSpeed = Math.Max(fanSpeed, 6);
+                var safeFanSpeed = Math.Max(fanSpeed, _profileConfig.MinFan);
                 
                 _logger.LogInformation("Temperature {ServerTemperature}, fan should be set to {SafeFanSpeed}. {HostOrIp} with offset {Offset}", serverTemperature, safeFanSpeed, server.HostOrIp, server.Offset);
                 await SetFan(server, safeFanSpeed);
