@@ -24,18 +24,13 @@ public class MonitorHandler : CommandHandler
     private async Task Execute(bool verbose)
     {
         var host = ServiceBuilder
-            .BuildHost<Startup>(verbose)
-            .ConfigureHostConfiguration(config =>
-            {
-                config.AddJsonFile("appsettings.json", optional: false);
-            })
+            .CreateCommandHostBuilder<Startup>(verbose)
             .ConfigureServices((context , services)=>
             {
                 var servers = context.Configuration.GetSection("Servers");
                 services.Configure<List<Server>>(servers);
             })
             .Build();
-        
 
         await host.RunAsync();
     }
