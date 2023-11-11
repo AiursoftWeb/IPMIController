@@ -10,14 +10,17 @@ namespace Aiursoft.IpmiController.Services;
 public class ServerMonitor : IHostedService
 {
     private readonly Server[] _servers;
+    private readonly ProfileConfig _profileConfig;
     private readonly ILogger _logger;
     private Timer? _timer;
 
     public ServerMonitor(
         IOptions<List<Server>> servers,
+        IOptions<ProfileConfig> profileConfig,
         ILogger<ServerMonitor> logger)
     {
         _servers = servers.Value.ToArray();
+        _profileConfig = profileConfig.Value;
         _logger = logger;
     }
 
@@ -144,6 +147,36 @@ public class ServerMonitor : IHostedService
 
     private Profile GetProfile()
     {
+        var allProfiles = GetAllProfiles();
+        if (string.IsNullOrWhiteSpace(_profileConfig.Profile?.ToLower()) ||
+            _profileConfig.Profile.ToLower() == "auto")
+        {
+            var now = DateTime.UtcNow;
+            if (now.Hour is >= 0 and < 4)
+            {
+                return allProfiles.Single(t => t.Name == "Normal");
+            }
+            if (now.Hour is >= 4 and < 12)
+            {
+                return allProfiles.Single(t => t.Name == "Turbo");
+            }
+            if (now.Hour is >= 12 and < 16)
+            {
+                return allProfiles.Single(t => t.Name == "Normal");
+            }
+            if (now.Hour is >= 16 and <= 24)
+            {
+                return allProfiles.Single(t => t.Name == "Quiet");
+            }
+            return allProfiles.Single(t => t.Name == "Full");
+        }
+        
+        return allProfiles.Single(t => t.Name.ToLower() == _profileConfig.Profile.ToLower());
+
+    }
+
+    private Profile[] GetAllProfiles()
+    {
         var quite = new Profile
         {
             Name = "Quiet",
@@ -168,24 +201,6 @@ public class ServerMonitor : IHostedService
             MaxTemperature = 1,
             DesiredTemperature = 0
         };
-        
-        var now = DateTime.UtcNow;
-        if (now.Hour is >= 0 and < 4)
-        {
-            return normal;
-        }
-        if (now.Hour is >= 4 and < 12)
-        {
-            return turbo;
-        }
-        if (now.Hour is >= 12 and < 16)
-        {
-            return normal;
-        }
-        if (now.Hour is >= 16 and <= 24)
-        {
-            return quite;
-        }
-        return full;
+        return new[] {quite, normal, turbo, full};
     }
 }
