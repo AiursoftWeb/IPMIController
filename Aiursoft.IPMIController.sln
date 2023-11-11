@@ -5,7 +5,7 @@ VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{540512B1-7151-4C3C-B18E-DB2818015550}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Aiursoft.IPMIController.Cli", "src\Aiursoft.IPMIController.Cli\Aiursoft.IPMIController.Cli.csproj", "{EBE5D8E3-6C81-42F0-B846-7BF0DE7F1F1A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Aiursoft.IPMIController", "src\Aiursoft.IPMIController\Aiursoft.IPMIController.csproj", "{EBE5D8E3-6C81-42F0-B846-7BF0DE7F1F1A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

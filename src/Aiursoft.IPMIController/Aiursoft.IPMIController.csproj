@@ -1,20 +1,29 @@
 <Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
+    <OutputType>Exe</OutputType>
     <Version>1.0.0</Version>
+    <TargetFramework>net7.0</TargetFramework>
+    <AssemblyName>ipmi-controller</AssemblyName>
+    <RootNamespace>Aiursoft.IPMIController</RootNamespace>
+    <IsTestProject>false</IsTestProject>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <IsPackable>true</IsPackable>
     <PackAsTool>true</PackAsTool>
-    <OutputType>Exe</OutputType>
-    <TargetFramework>net7.0</TargetFramework>
+    <ToolCommandName>ipmi-controller</ToolCommandName>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <Company>Aiursoft</Company>
+    <Product>Cli</Product>
+    <Description>Nuget package of 'Cli' provided by Aiursoft</Description>
+    <PackageId>Aiursoft.IPMIController</PackageId>
+    <PackageTags>nuget package dotnet cli tool</PackageTags>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
-
   <ItemGroup>
     <PackageReference Include="Aiursoft.CommandFramework" Version="7.0.5" />
     <PackageReference Include="Aiursoft.CSTools" Version="7.0.3" />
+    <None Include="..\..\README.md" Pack="true" PackagePath="." />
   </ItemGroup>
-
   <ItemGroup>
     <Content Include="appsettings.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -25,7 +34,5 @@
     <Content Include="appsettings.Development.json" Condition="Exists('appsettings.Development.json')">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <None Include="../../README.md" Pack="true" PackagePath="." />
   </ItemGroup>
-
 </Project>

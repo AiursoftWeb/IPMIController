@@ -1,6 +1,8 @@
 ﻿using System.CommandLine;
 using Aiursoft.CommandFramework.Models;
 
+namespace Aiursoft.IPMIController.Services;
+
 public static class OptionsProvider
 {
     public static RootCommand AddGlobalOptions(this RootCommand command)

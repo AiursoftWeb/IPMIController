@@ -1,4 +1,4 @@
-﻿namespace Aiursoft.IPMIController.Cli.Models;
+﻿namespace Aiursoft.IPMIController.Models;
 
 public class Profile
 {

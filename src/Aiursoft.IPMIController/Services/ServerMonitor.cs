@@ -1,9 +1,9 @@
 ﻿using System.Text.RegularExpressions;
 using Aiursoft.CSTools.Services;
-using Aiursoft.IPMIController.Cli.Models;
+using Aiursoft.IPMIController.Models;
 using Microsoft.Extensions.Logging;
 
-namespace Aiursoft.IPMIController.Cli.Services;
+namespace Aiursoft.IPMIController.Services;
 
 public class ServerMonitor
 {
