@@ -1,18 +1,27 @@
 ﻿using System.Text.RegularExpressions;
 using Aiursoft.CSTools.Services;
 using Aiursoft.IPMIController.Cli.Models;
+using Microsoft.Extensions.Logging;
 
 namespace Aiursoft.IPMIController.Cli.Services;
 
 public class ServerMonitor
 {
+    private readonly ILogger<ServerMonitor> _logger;
 
+    public ServerMonitor(ILogger<ServerMonitor> logger)
+    {
+        _logger = logger;
+    }
+    
+    
     public async Task StartMonitoring(Server[] servers, CancellationToken token = default)
     {
+        _logger.LogInformation("Starting monitoring...");
         var runner = new CommandService();
         foreach (var server in servers)
         {
-            Console.WriteLine($"Initializing server: {server.HostOrIp}...");
+            _logger.LogInformation($"Initializing server: {server.HostOrIp}...");
             await runner.RunCommandAsync("ipmitool",
                 $"-I lanplus -H {server.HostOrIp} -U root -P {server.RootPassword} raw 0x30 0xce 0x00 0x16 0x05 0x00 0x00 0x00 0x05 0x00 0x01 0x00 0x00",
                 Directory.GetCurrentDirectory());
@@ -27,7 +36,7 @@ public class ServerMonitor
         while (true)
         {
             var profile = GetProfile();
-            Console.WriteLine("Profile is " + profile);
+            _logger.LogInformation("Current Profile is {Profile}", profile.Name);
 
             foreach (var server in servers)
             {
@@ -41,10 +50,7 @@ public class ServerMonitor
                 }, token);
                 await Task.Delay(800, token);
             }
-
             await Task.Delay(10 * 1000, token);
-            Console.WriteLine("\n");
-            
             if (token.IsCancellationRequested)
             {
                 break;
