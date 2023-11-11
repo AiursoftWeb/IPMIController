@@ -6,6 +6,12 @@
 
 IPMI Controller is a .NET based CLI tool to control the server fan via IPMI. (Tested with Dell iDrac)
 
+## Install dependencies
+
+```bash
+sudo apt install ipmitool
+```
+
 ## Run locally
 
 Requirements about how to run
