@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <Version>1.0.6</Version>
+    <Version>1.0.7</Version>
     <TargetFramework>net7.0</TargetFramework>
     <AssemblyName>ipmi-controller</AssemblyName>
     <RootNamespace>Aiursoft.IpmiController</RootNamespace>
@@ -21,10 +21,9 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Aiursoft.CommandFramework" Version="7.0.6" />
-    <PackageReference Include="Aiursoft.CSTools" Version="7.0.3" />
+    <PackageReference Include="Aiursoft.CSTools" Version="7.0.5" />
     <None Include="..\..\README.md" Pack="true" PackagePath="." />
   </ItemGroup>
-
   <ItemGroup>
     <Content Include="appsettings.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
