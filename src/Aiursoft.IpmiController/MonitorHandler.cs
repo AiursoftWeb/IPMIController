@@ -1,4 +1,5 @@
 ﻿using System.CommandLine;
+using System.CommandLine.Invocation;
 using Aiursoft.CommandFramework.Framework;
 using Aiursoft.CommandFramework.Models;
 using Aiursoft.CommandFramework.Services;
@@ -9,7 +10,7 @@ using Microsoft.Extensions.Hosting;
 
 namespace Aiursoft.IpmiController;
 
-public class MonitorHandler : CommandHandler
+public class MonitorHandler : ExecutableCommandHandlerBuilder
 {
     public override string Name => "monitor";
 
@@ -31,28 +32,17 @@ public class MonitorHandler : CommandHandler
         IsRequired = false
     };
 
-    public override Option[] GetCommandOptions()
+    protected override async Task Execute(InvocationContext context)
     {
-        return new Option[]
-        {
-            _profile,
-            _minFan
-        };
-    }
-
-    public override void OnCommandBuilt(Command command)
-    {
-        command.SetHandler(
-            Execute, CommonOptionsProvider.VerboseOption, _profile, _minFan);
-    }
-
-    private async Task Execute(bool verbose, string profile, int minFan)
-    {
+        var verbose = context.ParseResult.GetValueForOption(CommonOptionsProvider.VerboseOption);
+        var profile = context.ParseResult.GetValueForOption(_profile);
+        var minFan = context.ParseResult.GetValueForOption(_minFan);
+        
         var host = ServiceBuilder
             .CreateCommandHostBuilder<Startup>(verbose)
-            .ConfigureServices((context , services)=>
+            .ConfigureServices((hostBuilderContext , services)=>
             {
-                var servers = context.Configuration.GetSection("Servers");
+                var servers = hostBuilderContext.Configuration.GetSection("Servers");
                 services.Configure<List<Server>>(servers);
                 services.Configure<ProfileConfig>(config =>
                 {
@@ -68,5 +58,15 @@ public class MonitorHandler : CommandHandler
         await serverInitializer.Start();
         
         await host.WaitForShutdownAsync();
+    }
+
+    public override Option[] GetCommandOptions()
+    {
+        return new Option[]
+        {
+            CommonOptionsProvider.VerboseOption,
+            _profile,
+            _minFan
+        };
     }
 }

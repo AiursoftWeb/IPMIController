@@ -1,7 +1,4 @@
-﻿// Program.cs
-using Aiursoft.CommandFramework;
-using Aiursoft.CommandFramework.Extensions;
-using Aiursoft.IpmiController.Services;
+﻿using Aiursoft.CommandFramework;
 
 namespace Aiursoft.IpmiController;
 
@@ -9,13 +6,8 @@ public class Program
 {
     public static async Task Main(string[] args)
     {
-        await new AiursoftCommand()
-            .Configure(command =>
-            {
-                command
-                    .AddGlobalOptions()
-                    .AddPlugins(new MonitorPlugin());
-            })
+        var command = new MonitorHandler().BuildAsCommand();
+        await new AiursoftCommandApp(command)
             .RunAsync(args);
     }
 }
