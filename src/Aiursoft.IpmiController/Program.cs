@@ -1,13 +1,4 @@
-﻿using Aiursoft.CommandFramework;
+﻿using Aiursoft.IpmiController;
 
-namespace Aiursoft.IpmiController;
+return await new MonitorHandler().RunAsync(args);
 
-public class Program
-{
-    public static async Task Main(string[] args)
-    {
-        var command = new MonitorHandler().BuildAsCommand();
-        await new AiursoftCommandApp(command)
-            .RunAsync(args);
-    }
-}
