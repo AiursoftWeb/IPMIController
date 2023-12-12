@@ -1,10 +1,11 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Aiursoft.CommandFramework;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace Aiursoft.IpmiController.Tests;
 
 [TestClass]
 public class IntegrationTests
 {
-    private readonly MonitorHandler _program = new();
+    private readonly SingleCommandApp<MonitorHandler> _program = new();
 
     [TestMethod]
     public async Task InvokeHelp()

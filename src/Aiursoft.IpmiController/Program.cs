@@ -1,4 +1,5 @@
-﻿using Aiursoft.IpmiController;
+﻿using Aiursoft.CommandFramework;
+using Aiursoft.IpmiController;
 
-return await new MonitorHandler().RunAsync(args);
+return await new SingleCommandApp<MonitorHandler>().RunAsync(args);
 

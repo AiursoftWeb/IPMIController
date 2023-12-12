@@ -12,9 +12,9 @@ namespace Aiursoft.IpmiController;
 
 public class MonitorHandler : ExecutableCommandHandlerBuilder
 {
-    public override string Name => "monitor";
+    protected override string Name => "monitor";
 
-    public override string Description => "Monitor the temperature of your servers.";
+    protected override string Description => "Monitor the temperature of your servers.";
     
     private readonly Option<string> _profile = new(
         aliases: new[] { "--profile", "-p" },
@@ -60,7 +60,7 @@ public class MonitorHandler : ExecutableCommandHandlerBuilder
         await host.WaitForShutdownAsync();
     }
 
-    public override Option[] GetCommandOptions()
+    protected override Option[] GetCommandOptions()
     {
         return new Option[]
         {
