@@ -57,7 +57,7 @@ public class ServerMonitor : IHostedService
         {
             _ = Task.Run(async () =>
             {
-                var serverTemperature = await GetTemperature(server);
+                var serverTemperature = Math.Max(await GetEgt(server), await GetGpu(server));
                 var fanSpeed = GetFanSpeedFromTemperature(serverTemperature, profile);
                 var safeFanSpeed = Math.Max(fanSpeed, _profileConfig.MinFan);
                 
@@ -68,7 +68,39 @@ public class ServerMonitor : IHostedService
         }
     }
 
-    private async Task<int> GetTemperature(Server server)
+    private async Task<int> GetGpu(Server server)
+    {
+        if (string.IsNullOrWhiteSpace(server.EsxiIp) || string.IsNullOrWhiteSpace(server.EsxiRootPassword))
+        {
+            _logger.LogTrace("Server {HostOrIp} doesn't have ESXI IP or ESXI Root Password!", server.HostOrIp);
+            // Return 0 because some servers don't have GPU.
+            return 0;
+        }
+        
+        var esxiSsh = new EsxiSshService();
+        var nvidiaSmiOutput = await esxiSsh.RunWithSsh(
+            server.EsxiIp,
+            "root",
+            server.EsxiRootPassword, 
+            22, 
+            "nvidia-smi -q");
+        
+        // GPU Current Temp                  : 49 C
+        var smi = new Regex(@"GPU Current Temp\s+:\s+(\d+) C");
+        var smiMatch = smi.Match(nvidiaSmiOutput);
+        if (!smiMatch.Success)
+        {
+            _logger.LogError("Server {HostOrIp} doesn't match the regex!", server.HostOrIp);
+            return 100;
+        }
+        
+        var smiTempString = smiMatch.Groups[1].Value;
+        
+        _logger.LogTrace("Server {HostOrIp} GPU temperature is {SmiTempString}", server.HostOrIp, smiTempString);
+        return int.Parse(smiTempString);
+    }
+
+    private async Task<int> GetEgt(Server server)
     {
         var runner = new CommandService();
         var output = await runner.RunCommandAsync("ipmitool",
