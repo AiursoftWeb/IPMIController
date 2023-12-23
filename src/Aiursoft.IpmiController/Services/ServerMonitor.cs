@@ -70,59 +70,76 @@ public class ServerMonitor : IHostedService
 
     private async Task<int> GetGpu(Server server)
     {
-        if (string.IsNullOrWhiteSpace(server.EsxiIp) || string.IsNullOrWhiteSpace(server.EsxiRootPassword))
+        try
         {
-            _logger.LogTrace("Server {HostOrIp} doesn't have ESXI IP or ESXI Root Password!", server.HostOrIp);
-            // Return 0 because some servers don't have GPU.
-            return 0;
+            if (string.IsNullOrWhiteSpace(server.EsxiIp) || string.IsNullOrWhiteSpace(server.EsxiRootPassword))
+            {
+                _logger.LogTrace("Server {HostOrIp} doesn't have ESXI IP or ESXI Root Password!", server.HostOrIp);
+                // Return 0 because some servers don't have GPU.
+                return 0;
+            }
+
+            var esxiSsh = new EsxiSshService();
+            var nvidiaSmiOutput = await esxiSsh.RunWithSsh(
+                server.EsxiIp,
+                "root",
+                server.EsxiRootPassword,
+                22,
+                "nvidia-smi -q");
+
+            // GPU Current Temp                  : 49 C
+            var smi = new Regex(@"GPU Current Temp\s+:\s+(\d+) C");
+            var smiMatch = smi.Match(nvidiaSmiOutput);
+            if (!smiMatch.Success)
+            {
+                _logger.LogError("Server {HostOrIp} doesn't match the regex!", server.HostOrIp);
+                return 100;
+            }
+
+            var smiTempString = smiMatch.Groups[1].Value;
+
+            _logger.LogTrace("Server {HostOrIp} GPU temperature is {SmiTempString}", server.HostOrIp, smiTempString);
+            return int.Parse(smiTempString);
         }
-        
-        var esxiSsh = new EsxiSshService();
-        var nvidiaSmiOutput = await esxiSsh.RunWithSsh(
-            server.EsxiIp,
-            "root",
-            server.EsxiRootPassword, 
-            22, 
-            "nvidia-smi -q");
-        
-        // GPU Current Temp                  : 49 C
-        var smi = new Regex(@"GPU Current Temp\s+:\s+(\d+) C");
-        var smiMatch = smi.Match(nvidiaSmiOutput);
-        if (!smiMatch.Success)
+        catch (Exception e)
         {
-            _logger.LogError("Server {HostOrIp} doesn't match the regex!", server.HostOrIp);
+            _logger.LogError(e, "Server {HostOrIp} failed to get GPU temperature!", server.HostOrIp);
             return 100;
         }
-        
-        var smiTempString = smiMatch.Groups[1].Value;
-        
-        _logger.LogTrace("Server {HostOrIp} GPU temperature is {SmiTempString}", server.HostOrIp, smiTempString);
-        return int.Parse(smiTempString);
     }
 
     private async Task<int> GetEgt(Server server)
     {
-        var runner = new CommandService();
-        var output = await runner.RunCommandAsync("ipmitool",
-            $"-I lanplus -H {server.HostOrIp} -U root -P {server.RootPassword} sdr type temperature", Directory.GetCurrentDirectory());
-        var regex = new Regex(@"Temp\s+\|\s+\w+\s+\|\s+ok\s+\|\s+\d+\.\d+\s+\|\s+(\d+) degrees C");
-        var matches = regex.Matches(output.output);
-        if (!matches.Any())
+        try
         {
+            var runner = new CommandService();
+            var output = await runner.RunCommandAsync("ipmitool",
+                $"-I lanplus -H {server.HostOrIp} -U root -P {server.RootPassword} sdr type temperature",
+                Directory.GetCurrentDirectory());
+            var regex = new Regex(@"Temp\s+\|\s+\w+\s+\|\s+ok\s+\|\s+\d+\.\d+\s+\|\s+(\d+) degrees C");
+            var matches = regex.Matches(output.output);
+            if (!matches.Any())
+            {
+                return 100;
+            }
+
+            var max = 0;
+            foreach (Match match in matches)
+            {
+                var tempString = match.Groups[1].Value;
+                int temp = int.Parse(tempString);
+
+                if (temp > max)
+                    max = temp;
+            }
+
+            return max + server.Offset;
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "Server {HostOrIp} failed to get EGT temperature!", server.HostOrIp);
             return 100;
         }
-
-        var max = 0;
-        foreach (Match match in matches)
-        {
-            var tempString = match.Groups[1].Value;
-            int temp = int.Parse(tempString);
-
-            if (temp > max)
-                max = temp;
-        }
-
-        return max + server.Offset;
     }
 
     private async Task SetFan(Server server, int fan)
