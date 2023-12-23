@@ -80,7 +80,7 @@ public class ServerMonitor : IHostedService
             }
 
             var esxiSsh = new EsxiSshService();
-            var nvidiaSmiOutput = await esxiSsh.RunWithSsh(
+            var nvidiaSmiOutput = await esxiSsh.RunWithSshAndTimeout(
                 server.EsxiIp,
                 "root",
                 server.EsxiRootPassword,
