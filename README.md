@@ -51,7 +51,7 @@ Options:
 
 Requirements about how to run
 
-1. [.NET 7 SDK](http://dot.net/)
+1. [.NET 8 SDK](http://dot.net/)
 2. Execute `dotnet run` to run the app
 
 ## Run in Microsoft Visual Studio
