@@ -58,7 +58,7 @@ public class MonitorHandler : ExecutableCommandHandlerBuilder
         await serverInitializer.Start();
         
         await host.WaitForShutdownAsync();
-        await serverInitializer.Finalize();
+        await serverInitializer.FinalizeServers();
     }
 
     protected override Option[] GetCommandOptions()

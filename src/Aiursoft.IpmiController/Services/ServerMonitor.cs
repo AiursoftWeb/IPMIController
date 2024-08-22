@@ -115,7 +115,6 @@ public class ServerMonitor : IHostedService
     {
         try
         {
-            var runner = new CommandService();
             var (_, stdout, _)= await _ipmiExecutorService.ExecuteCommand(server, "sdr type temperature"); 
             var regex = new Regex(@"Temp\s+\|\s+\w+\s+\|\s+ok\s+\|\s+\d+\.\d+\s+\|\s+(\d+) degrees C");
             var matches = regex.Matches(stdout);

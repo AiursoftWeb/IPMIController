@@ -24,7 +24,6 @@ public class ServerInitializer
     public async Task Start()
     {
         _logger.LogInformation("Starting initializing {Count }servers...", _servers.Length);
-        var runner = new CommandService();
         foreach (var server in _servers)
         {
             try
@@ -47,10 +46,9 @@ public class ServerInitializer
         _logger.LogInformation("All servers initialized!");
     }
     
-    public async Task Finalize()
+    public async Task FinalizeServers()
     {
         _logger.LogInformation("Starting finalizing {Count }servers...", _servers.Length);
-        var runner = new CommandService();
         foreach (var server in _servers)
         {
             try
