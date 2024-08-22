@@ -1,5 +1,4 @@
-﻿using Aiursoft.CSTools.Services;
-using Aiursoft.IpmiController.Models;
+﻿using Aiursoft.IpmiController.Models;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
