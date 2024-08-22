@@ -12,16 +12,19 @@ public class ServerMonitor : IHostedService
     private readonly Server[] _servers;
     private readonly ProfileConfig _profileConfig;
     private readonly ILogger _logger;
+    private readonly IpmiExecutorService _ipmiExecutorService;
     private Timer? _timer;
 
     public ServerMonitor(
         IOptions<List<Server>> servers,
         IOptions<ProfileConfig> profileConfig,
-        ILogger<ServerMonitor> logger)
+        ILogger<ServerMonitor> logger,
+        IpmiExecutorService ipmiExecutorService)
     {
         _servers = servers.Value.ToArray();
         _profileConfig = profileConfig.Value;
         _logger = logger;
+        _ipmiExecutorService = ipmiExecutorService;
     }
 
     public void Dispose()
@@ -113,11 +116,9 @@ public class ServerMonitor : IHostedService
         try
         {
             var runner = new CommandService();
-            var output = await runner.RunCommandAsync("ipmitool",
-                $"-I lanplus -H {server.HostOrIp} -U root -P {server.RootPassword} sdr type temperature",
-                Directory.GetCurrentDirectory());
+            var (_, stdout, _)= await _ipmiExecutorService.ExecuteCommand(server, "sdr type temperature"); 
             var regex = new Regex(@"Temp\s+\|\s+\w+\s+\|\s+ok\s+\|\s+\d+\.\d+\s+\|\s+(\d+) degrees C");
-            var matches = regex.Matches(output.output);
+            var matches = regex.Matches(stdout);
             if (!matches.Any())
             {
                 return 100;
@@ -146,11 +147,7 @@ public class ServerMonitor : IHostedService
     {
         if (server.CurrentFanSpeed != fan)
         {
-            var runner = new CommandService();
-            await runner.RunCommandAsync("ipmitool",
-                $"-I lanplus -H {server.HostOrIp} -U root -P {server.RootPassword} raw 0x30 0x30 0x02 0xff 0x" +
-                fan.ToString("X2"),
-                Directory.GetCurrentDirectory());
+            await _ipmiExecutorService.ExecuteCommand(server, $"raw 0x30 0x30 0x02 0xff 0x{fan:X2}");
             server.CurrentFanSpeed = fan;
         }
     }
@@ -226,6 +223,6 @@ public class ServerMonitor : IHostedService
             MaxTemperature = 1,
             DesiredTemperature = 0
         };
-        return new[] {quite, normal, turbo, full};
+        return [quite, normal, turbo, full];
     }
 }
