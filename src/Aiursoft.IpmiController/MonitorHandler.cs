@@ -17,7 +17,7 @@ public class MonitorHandler : ExecutableCommandHandlerBuilder
     protected override string Description => "Monitor the temperature of your servers.";
     
     private readonly Option<string> _profile = new(
-        aliases: new[] { "--profile", "-p" },
+        aliases: ["--profile", "-p"],
         getDefaultValue: () => "auto",
         description: "The target profile. Can be: 'auto','turbo','normal','quiet','full'.")
     {
@@ -25,7 +25,7 @@ public class MonitorHandler : ExecutableCommandHandlerBuilder
     };
     
     private readonly Option<int> _minFan = new(
-        aliases: new[] { "--minfan", "-m" },
+        aliases: ["--minfan", "-m"],
         getDefaultValue: () => 6,
         description: "The minimum fan speed. Can be: 0-100.")
     {
@@ -58,15 +58,16 @@ public class MonitorHandler : ExecutableCommandHandlerBuilder
         await serverInitializer.Start();
         
         await host.WaitForShutdownAsync();
+        await serverInitializer.FinalizeServers();
     }
 
     protected override Option[] GetCommandOptions()
     {
-        return new Option[]
-        {
+        return
+        [
             CommonOptionsProvider.VerboseOption,
             _profile,
             _minFan
-        };
+        ];
     }
 }

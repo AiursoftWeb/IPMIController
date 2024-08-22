@@ -11,5 +11,6 @@ public class Startup : IStartUp
     {
         services.AddTransient<ServerInitializer>();
         services.AddSingleton<IHostedService, ServerMonitor>();
+        services.AddTransient<IpmiExecutorService>();
     }
 }
