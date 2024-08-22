@@ -1,5 +1,4 @@
 ﻿using System.Text.RegularExpressions;
-using Aiursoft.CSTools.Services;
 using Aiursoft.IpmiController.Models;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
