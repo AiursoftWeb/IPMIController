@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <Version>8.0.9</Version>
+    <Version>8.0.10</Version>
     <TargetFramework>net8.0</TargetFramework>
     <AssemblyName>ipmi-controller</AssemblyName>
     <RootNamespace>Aiursoft.IpmiController</RootNamespace>
@@ -17,6 +17,10 @@
     <Description>Nuget package of 'IpmiController' provided by Aiursoft</Description>
     <PackageId>Aiursoft.IpmiController</PackageId>
     <PackageTags>nuget package dotnet cli tool</PackageTags>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://gitlab.aiursoft.cn/aiursoft/ipmicontroller</PackageProjectUrl>
+    <RepositoryType>git</RepositoryType>
+    <RepositoryUrl>https://gitlab.aiursoft.cn/aiursoft/ipmicontroller.git</RepositoryUrl>
     <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
   <ItemGroup>
