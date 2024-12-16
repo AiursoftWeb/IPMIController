@@ -45,9 +45,9 @@ public class ServerMonitor : IHostedService
         return Task.CompletedTask;
     }
 
-    private async void DoWork(object? state)
+    private void DoWork(object? state)
     {
-        await StartMonitoring();
+        StartMonitoring().Wait();
     }
     
     private async Task StartMonitoring(CancellationToken token = default)
