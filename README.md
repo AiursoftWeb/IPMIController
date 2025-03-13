@@ -8,7 +8,7 @@
 
 IPMI Controller is a .NET based CLI tool to control the server fan via IPMI. (Tested with Dell iDrac)
 
-## Install
+## Installation
 
 Requirements:
 
@@ -30,11 +30,21 @@ It requires the current directory to have a `appsettings.json` file.
   "Servers": [
     {
       "HostOrIp": "10.0.0.1",
-      "RootPassword": "pass@word1"
+      "RootPassword": "pass@word1",
+      "EsxiIp": "10.0.0.100",
+      "EsxiRootPassword": "pass@word2",
+      "Offset": 0
     }
   ]
 }
 ```
+
+* HostOrIp must be the IPMI address of the server.
+* RootPassword must be the IPMI password of the server.
+* EsxiIp is optional. If provided, it will try to connect to the ESXi server to get the `nvidia-smi` temperature.
+* ExsiRootPassword is **optional**. If provided, it will try to connect to the ESXi server to get the `nvidia-smi` temperature.
+* Offset is **optional**. If provided, it will add the offset to the target temperature.
+  * For example, if `Offset` is 10, then a 30-degree target temperature will be treated as 40 degrees.
 
 It will read the `Servers` array and try to connect to each server. If the connection is successful, it will try to read the current fan speed and then set the fan speed to the target speed.
 
