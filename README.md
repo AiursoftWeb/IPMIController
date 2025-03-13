@@ -53,7 +53,7 @@ Options:
   -?, -h, --help           Show help and usage information
 ```
 
-## How to run from source code
+## Run locally
 
 Requirements about how to run
 
