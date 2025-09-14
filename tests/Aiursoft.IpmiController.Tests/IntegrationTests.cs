@@ -1,5 +1,5 @@
 ﻿using Aiursoft.CommandFramework;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+
 namespace Aiursoft.IpmiController.Tests;
 
 [TestClass]

@@ -16,7 +16,7 @@ public class IpmiExecutorService
         _logger = logger;
         _runner = new CommandService();
     }
-    
+
     /// <summary>
     /// Executes an IPMI command on the specified server.
     /// </summary>
@@ -34,10 +34,10 @@ public class IpmiExecutorService
                 $"-I lanplus -H {server.HostOrIp} -U root -P {server.RootPassword} {options}",
                 Directory.GetCurrentDirectory());
             if (result.code == 0 || !ensureSuccess) return result;
-            _logger.LogWarning("Ipmi command {} failed! Chance left: {}", options, maxTries);
+            _logger.LogWarning("Ipmi command {Options} failed! Chance left: {Chance}", options, maxTries);
             except = new FailedIpmiCommandException(server, options, result.code, result.output, result.error);
         }
-        _logger.LogError("Ipmi command {} failed, throwing.", options);
+        _logger.LogError("Ipmi command {Options} failed, throwing.", options);
         throw except!;
     }
 }
