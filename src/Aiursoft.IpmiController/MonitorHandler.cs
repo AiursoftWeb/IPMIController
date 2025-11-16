@@ -1,5 +1,4 @@
 ﻿using System.CommandLine;
-using System.CommandLine.Invocation;
 using Aiursoft.CommandFramework.Framework;
 using Aiursoft.CommandFramework.Models;
 using Aiursoft.CommandFramework.Services;
@@ -15,21 +14,23 @@ public class MonitorHandler : ExecutableCommandHandlerBuilder
     protected override string Name => "monitor";
 
     protected override string Description => "Monitor the temperature of your servers.";
-    
+
     private readonly Option<string> _profile = new(
-        aliases: ["--profile", "-p"],
-        getDefaultValue: () => "auto",
-        description: "The target profile. Can be: 'auto','turbo','normal','quiet','full'.")
+        name: "--profile",
+        aliases: ["-p"])
     {
-        IsRequired = false
+        DefaultValueFactory = _ => "auto",
+        Description = "The target profile. Can be: 'auto','turbo','normal','quiet','full'.",
+        Required = false
     };
-    
+
     private readonly Option<int> _minFan = new(
-        aliases: ["--minfan", "-m"],
-        getDefaultValue: () => 6,
-        description: "The minimum fan speed. Can be: 0-100.")
+        name: "--minfan",
+        aliases: ["-m"])
     {
-        IsRequired = false
+        DefaultValueFactory = _ => 6,
+        Description = "The minimum fan speed. Can be: 0-100.",
+        Required = false
     };
 
     protected override async Task Execute(ParseResult context)
@@ -37,7 +38,7 @@ public class MonitorHandler : ExecutableCommandHandlerBuilder
         var verbose = context.GetValue(CommonOptionsProvider.VerboseOption);
         var profile = context.GetValue(_profile);
         var minFan = context.GetValue(_minFan);
-        
+
         var host = ServiceBuilder
             .CreateCommandHostBuilder<Startup>(verbose)
             .ConfigureServices((hostBuilderContext , services)=>
@@ -53,10 +54,10 @@ public class MonitorHandler : ExecutableCommandHandlerBuilder
             .Build();
 
         await host.StartAsync();
-        
+
         var serverInitializer = host.Services.GetRequiredService<ServerInitializer>();
         await serverInitializer.Start();
-        
+
         await host.WaitForShutdownAsync();
         await serverInitializer.FinalizeServers();
     }
