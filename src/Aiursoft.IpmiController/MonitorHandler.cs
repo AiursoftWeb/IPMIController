@@ -32,11 +32,11 @@ public class MonitorHandler : ExecutableCommandHandlerBuilder
         IsRequired = false
     };
 
-    protected override async Task Execute(InvocationContext context)
+    protected override async Task Execute(ParseResult context)
     {
-        var verbose = context.ParseResult.GetValueForOption(CommonOptionsProvider.VerboseOption);
-        var profile = context.ParseResult.GetValueForOption(_profile);
-        var minFan = context.ParseResult.GetValueForOption(_minFan);
+        var verbose = context.GetValue(CommonOptionsProvider.VerboseOption);
+        var profile = context.GetValue(_profile);
+        var minFan = context.GetValue(_minFan);
         
         var host = ServiceBuilder
             .CreateCommandHostBuilder<Startup>(verbose)
