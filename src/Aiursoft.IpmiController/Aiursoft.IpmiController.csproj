@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <Version>10.0.4</Version>
+    <Version>10.0.5</Version>
     <TargetFramework>net10.0</TargetFramework>
     <AssemblyName>ipmi-controller</AssemblyName>
     <RootNamespace>Aiursoft.IpmiController</RootNamespace>
@@ -25,7 +25,7 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Aiursoft.CommandFramework" Version="10.0.3" />
-    <PackageReference Include="Aiursoft.CSTools" Version="10.0.2" />
+    <PackageReference Include="Aiursoft.CSTools" Version="10.0.3" />
     <None Include="..\..\README.md" Pack="true" PackagePath="." />
     <PackageReference Include="SSH.NET" Version="2025.1.0" />
   </ItemGroup>
