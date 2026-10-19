@@ -1,6 +1,6 @@
 # IPMIController
 
-[![MIT licensed](https://img.shields.io/badge/license-MIT-blue.svg)](https://gitlab.aiursoft.com/aiursoft/IPMIController/-/blob/master/LICENSE)
+[![MIT licensed](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/AiursoftWeb/ipmicontroller/blob/master/LICENSE)
 [![Pipeline stat](https://gitlab.aiursoft.com/aiursoft/IPMIController/badges/master/pipeline.svg)](https://gitlab.aiursoft.com/aiursoft/IPMIController/-/pipelines)
 [![Test Coverage](https://gitlab.aiursoft.com/aiursoft/IPMIController/badges/master/coverage.svg)](https://gitlab.aiursoft.com/aiursoft/IPMIController/-/pipelines)
 [![NuGet version (Aiursoft.IPMIController)](https://img.shields.io/nuget/v/Aiursoft.IPMIController.svg)](https://www.nuget.org/packages/Aiursoft.IPMIController/)
