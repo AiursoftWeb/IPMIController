@@ -3,6 +3,7 @@
 [![MIT licensed](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/AiursoftWeb/ipmicontroller/blob/master/LICENSE)
 [![Pipeline stat](https://gitlab.aiursoft.com/aiursoft/IPMIController/badges/master/pipeline.svg)](https://gitlab.aiursoft.com/aiursoft/IPMIController/-/pipelines)
 [![Test Coverage](https://gitlab.aiursoft.com/aiursoft/IPMIController/badges/master/coverage.svg)](https://gitlab.aiursoft.com/aiursoft/IPMIController/-/pipelines)
+[![S360 compliance](https://s360.aiursoft.com/badge.svg?project=aiursoft%2Fipmicontroller)](https://s360.aiursoft.com/SupplyChain?tab=projects&project=aiursoft%2Fipmicontroller&scope=baseline&ecosystem=all)
 [![NuGet version (Aiursoft.IPMIController)](https://img.shields.io/nuget/v/Aiursoft.IPMIController.svg)](https://www.nuget.org/packages/Aiursoft.IPMIController/)
 [![Man hours](https://manhours.aiursoft.com/r/github.com/aiursoftweb/IPMIController.svg)](https://manhours.aiursoft.com/r/github.com/aiursoftweb/IPMIController.html)
 
