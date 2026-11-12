@@ -168,8 +168,8 @@ public class ServerMonitor : IHostedService
     private Profile GetProfile()
     {
         var allProfiles = GetAllProfiles();
-        if (string.IsNullOrWhiteSpace(_profileConfig.Profile?.ToLower()) ||
-            _profileConfig.Profile.ToLower() == "auto")
+        if (string.IsNullOrWhiteSpace(_profileConfig.Profile) ||
+            _profileConfig.Profile.Equals("auto", StringComparison.OrdinalIgnoreCase))
         {
             var now = DateTime.UtcNow;
             if (now.Hour is >= 0 and < 4)
@@ -191,7 +191,7 @@ public class ServerMonitor : IHostedService
             return allProfiles.Single(t => t.Name == "Full");
         }
         
-        return allProfiles.Single(t => t.Name.ToLower() == _profileConfig.Profile.ToLower());
+        return allProfiles.Single(t => string.Equals(t.Name, _profileConfig.Profile, StringComparison.OrdinalIgnoreCase));
 
     }
 
